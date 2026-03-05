@@ -93,11 +93,9 @@ Phone: (0917) 506-2282 | Email: 300845@deped.gov.ph | Visit: Brgy. Poblacion Nor
 
     if (!geminiRes.ok) {
       console.error("Gemini API error:", JSON.stringify(data));
-      const errCode = data?.error?.code || geminiRes.status;
-      if (errCode === 400) return res.status(400).json({ error: "Invalid request. Please try again." });
-      if (errCode === 403) return res.status(403).json({ error: "API key is invalid or lacks permission." });
-      if (errCode === 429) return res.status(429).json({ error: "Too many requests. Please try again in a moment." });
-      return res.status(500).json({ error: "AI service error. Please try again or contact ERLHS at (0917) 506-2282." });
+      return res.status(200).json({
+        reply: "I'm having a bit of trouble connecting to my brain right now! 🧠 Please try asking again in a second." 
+      });
     }
 
     const reply =
