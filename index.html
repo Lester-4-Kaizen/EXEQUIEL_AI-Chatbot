@@ -306,6 +306,41 @@
         }
       }
 
+      .new-chat-btn {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 13px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.13);
+        color: rgba(255, 255, 255, 0.7);
+        font-family: var(--f);
+        font-size: 0.68rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          background 0.18s,
+          border-color 0.18s,
+          color 0.18s;
+        white-space: nowrap;
+      }
+      .new-chat-btn:hover {
+        background: rgba(82, 184, 90, 0.15);
+        border-color: rgba(82, 184, 90, 0.35);
+        color: #52b85a;
+      }
+      .new-chat-btn svg {
+        width: 13px;
+        height: 13px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
       /* ════════════════════════════════
        STATUS BANNER
     ════════════════════════════════ */
@@ -1004,7 +1039,9 @@
         align-items: center;
         justify-content: center;
         color: var(--dim);
-        transition: color 0.15s, background 0.15s;
+        transition:
+          color 0.15s,
+          background 0.15s;
       }
       .msg-action-btn:hover {
         color: var(--g4);
@@ -1024,7 +1061,7 @@
       }
       .edit-textarea {
         width: 100%;
-        background: rgba(255,255,255,0.07);
+        background: rgba(255, 255, 255, 0.07);
         border: 1.5px solid rgba(82, 184, 90, 0.5);
         border-radius: 12px;
         color: var(--white);
@@ -1042,7 +1079,8 @@
         justify-content: flex-end;
         gap: 8px;
       }
-      .edit-cancel-btn, .edit-save-btn {
+      .edit-cancel-btn,
+      .edit-save-btn {
         font-family: var(--f);
         font-size: 0.72rem;
         font-weight: 600;
@@ -1050,15 +1088,17 @@
         border-radius: 20px;
         border: none;
         cursor: pointer;
-        transition: background 0.15s, transform 0.12s;
+        transition:
+          background 0.15s,
+          transform 0.12s;
       }
       .edit-cancel-btn {
-        background: rgba(255,255,255,0.08);
+        background: rgba(255, 255, 255, 0.08);
         color: var(--mid);
-        border: 1px solid rgba(255,255,255,0.12);
+        border: 1px solid rgba(255, 255, 255, 0.12);
       }
       .edit-cancel-btn:hover {
-        background: rgba(255,255,255,0.14);
+        background: rgba(255, 255, 255, 0.14);
         color: var(--off);
       }
       .edit-save-btn {
@@ -1082,8 +1122,8 @@
         justify-content: flex-end;
       }
       .branch-btn {
-        background: rgba(255,255,255,0.07);
-        border: 1px solid rgba(255,255,255,0.12);
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.12);
         color: var(--mid);
         border-radius: 6px;
         width: 22px;
@@ -1093,13 +1133,15 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: background 0.15s, color 0.15s;
+        transition:
+          background 0.15s,
+          color 0.15s;
         padding: 0;
       }
       .branch-btn:hover:not(:disabled) {
-        background: rgba(82,184,90,0.15);
+        background: rgba(82, 184, 90, 0.15);
         color: var(--g4);
-        border-color: rgba(82,184,90,0.3);
+        border-color: rgba(82, 184, 90, 0.3);
       }
       .branch-btn:disabled {
         opacity: 0.3;
@@ -1124,8 +1166,12 @@
         opacity: 0;
         transition: opacity 0.18s;
       }
-      .msg-row:hover .msg-meta { opacity: 1; }
-      .msg-row.user .msg-meta { justify-content: flex-end; }
+      .msg-row:hover .msg-meta {
+        opacity: 1;
+      }
+      .msg-row.user .msg-meta {
+        justify-content: flex-end;
+      }
       .msg-ts {
         font-size: 0.56rem;
         color: var(--dimmer);
@@ -1141,13 +1187,18 @@
         align-items: center;
         justify-content: center;
         color: var(--dim);
-        transition: color 0.15s, background 0.15s;
+        transition:
+          color 0.15s,
+          background 0.15s;
       }
       .msg-action-btn:hover {
         color: var(--g4);
-        background: rgba(82,184,90,0.12);
+        background: rgba(82, 184, 90, 0.12);
       }
-      .msg-action-btn svg { width: 12px; height: 12px; }
+      .msg-action-btn svg {
+        width: 12px;
+        height: 12px;
+      }
 
       /* ════════════════════════════════
        EDIT MODAL
@@ -1155,7 +1206,7 @@
       .edit-overlay {
         position: fixed;
         inset: 0;
-        background: rgba(0,0,0,0.55);
+        background: rgba(0, 0, 0, 0.55);
         z-index: 100;
         display: flex;
         align-items: center;
@@ -1163,28 +1214,41 @@
         padding: 20px;
         animation: fadeIn 0.18s ease;
       }
-      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
       .edit-modal {
         width: 100%;
         max-width: 620px;
         background: #142416;
-        border: 1.5px solid rgba(82,184,90,0.35);
+        border: 1.5px solid rgba(82, 184, 90, 0.35);
         border-radius: 16px;
         padding: 16px;
         display: flex;
         flex-direction: column;
         gap: 12px;
-        box-shadow: 0 12px 48px rgba(0,0,0,0.6);
-        animation: slideUp 0.2s cubic-bezier(0.22,1,0.36,1);
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+        animation: slideUp 0.2s cubic-bezier(0.22, 1, 0.36, 1);
       }
       @keyframes slideUp {
-        from { opacity: 0; transform: translateY(16px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
       .edit-textarea {
         width: 100%;
-        background: rgba(255,255,255,0.05);
-        border: 1.5px solid rgba(82,184,90,0.5);
+        background: rgba(255, 255, 255, 0.05);
+        border: 1.5px solid rgba(82, 184, 90, 0.5);
         border-radius: 10px;
         color: var(--white);
         font-family: var(--f);
@@ -1195,7 +1259,7 @@
         min-height: 90px;
         max-height: 300px;
         outline: none;
-        box-shadow: 0 0 0 3px rgba(36,98,40,0.18);
+        box-shadow: 0 0 0 3px rgba(36, 98, 40, 0.18);
         caret-color: var(--g4);
       }
       .edit-note {
@@ -1217,7 +1281,8 @@
         justify-content: flex-end;
         gap: 8px;
       }
-      .edit-cancel-btn, .edit-save-btn {
+      .edit-cancel-btn,
+      .edit-save-btn {
         font-family: var(--f);
         font-size: 0.76rem;
         font-weight: 600;
@@ -1225,30 +1290,42 @@
         border-radius: 20px;
         border: none;
         cursor: pointer;
-        transition: background 0.15s, transform 0.12s;
+        transition:
+          background 0.15s,
+          transform 0.12s;
       }
       .edit-cancel-btn {
-        background: rgba(255,255,255,0.08);
+        background: rgba(255, 255, 255, 0.08);
         color: var(--mid);
-        border: 1px solid rgba(255,255,255,0.12);
+        border: 1px solid rgba(255, 255, 255, 0.12);
       }
       .edit-cancel-btn:hover {
-        background: rgba(255,255,255,0.14);
+        background: rgba(255, 255, 255, 0.14);
         color: var(--off);
       }
       .edit-save-btn {
         background: linear-gradient(140deg, var(--g2), var(--g3));
         color: #fff;
-        box-shadow: 0 2px 10px rgba(36,98,40,0.4);
+        box-shadow: 0 2px 10px rgba(36, 98, 40, 0.4);
       }
       .edit-save-btn:hover {
         transform: scale(1.04);
-        box-shadow: 0 4px 14px rgba(36,98,40,0.6);
+        box-shadow: 0 4px 14px rgba(36, 98, 40, 0.6);
       }
       @media (max-width: 600px) {
-        .edit-modal { padding: 14px; border-radius: 14px; }
-        .edit-textarea { font-size: 0.82rem; min-height: 80px; }
-        .edit-cancel-btn, .edit-save-btn { font-size: 0.7rem; padding: 6px 14px; }
+        .edit-modal {
+          padding: 14px;
+          border-radius: 14px;
+        }
+        .edit-textarea {
+          font-size: 0.82rem;
+          min-height: 80px;
+        }
+        .edit-cancel-btn,
+        .edit-save-btn {
+          font-size: 0.7rem;
+          padding: 6px 14px;
+        }
       }
     </style>
   </head>
@@ -1282,6 +1359,10 @@
             <div class="nav-online-dot"></div>
             <span>Online</span>
           </div>
+          <button class="new-chat-btn" onclick="newChat()" title="New Chat">
+            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>
+            New Chat
+          </button>
         </div>
       </header>
 
@@ -1515,20 +1596,27 @@
 
       // ── HELPERS ──────────────────────────────────
       function formatTime() {
-        return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        return new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
       }
       function autoGrow(el) {
         el.style.height = "auto";
         el.style.height = Math.min(el.scrollHeight, 100) + "px";
       }
       function handleKey(e) {
-        if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
       }
       function catSend(key) {
         const prompts = {
           programs: "What programs does ERLHS offer?",
           enrollment: "What are the enrollment requirements at ERLHS?",
-          tuition: "How much is the tuition and what scholarships are available?",
+          tuition:
+            "How much is the tuition and what scholarships are available?",
           location: "Where is ERLHS located and how do I get there?",
           contact: "What is the contact information of ERLHS?",
           schedule: "What are the school hours and academic calendar of ERLHS?",
@@ -1540,7 +1628,8 @@
         mainEl.scrollTo({ top: mainEl.scrollHeight, behavior: "smooth" });
       }
       mainEl.addEventListener("scroll", () => {
-        const atBottom = mainEl.scrollHeight - mainEl.scrollTop - mainEl.clientHeight < 60;
+        const atBottom =
+          mainEl.scrollHeight - mainEl.scrollTop - mainEl.clientHeight < 60;
         fabEl.classList.toggle("visible", !atBottom);
       });
 
@@ -1564,7 +1653,9 @@
         bannerEl.className = "status-banner show " + type;
         bannerTextEl.textContent = text;
       }
-      function hideBanner() { bannerEl.className = "status-banner"; }
+      function hideBanner() {
+        bannerEl.className = "status-banner";
+      }
 
       // ── RENDER CONTENT ────────────────────────────
       function renderContent(text) {
@@ -1653,7 +1744,10 @@
             const rb = document.createElement("button");
             rb.className = "retry-btn";
             rb.innerHTML = "&#8635; Try again";
-            rb.onclick = () => { row.remove(); options.onRetry(); };
+            rb.onclick = () => {
+              row.remove();
+              options.onRetry();
+            };
             bub.appendChild(document.createElement("br"));
             bub.appendChild(rb);
           }
@@ -1764,14 +1858,20 @@
           editArea.style.height = "auto";
           editArea.style.height = Math.min(editArea.scrollHeight, 300) + "px";
           editArea.focus();
-          editArea.setSelectionRange(editArea.value.length, editArea.value.length);
+          editArea.setSelectionRange(
+            editArea.value.length,
+            editArea.value.length,
+          );
         }, 10);
         editArea.addEventListener("input", () => {
           editArea.style.height = "auto";
           editArea.style.height = Math.min(editArea.scrollHeight, 300) + "px";
         });
         editArea.addEventListener("keydown", (e) => {
-          if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); confirmEdit(); }
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            confirmEdit();
+          }
           if (e.key === "Escape") cancelEdit();
         });
 
@@ -1804,9 +1904,13 @@
         modal.appendChild(btnRow);
         overlay.appendChild(modal);
         document.body.appendChild(overlay);
-        overlay.addEventListener("click", (e) => { if (e.target === overlay) cancelEdit(); });
+        overlay.addEventListener("click", (e) => {
+          if (e.target === overlay) cancelEdit();
+        });
 
-        function cancelEdit() { overlay.remove(); }
+        function cancelEdit() {
+          overlay.remove();
+        }
 
         async function confirmEdit() {
           const newText = editArea.value.trim();
@@ -1822,7 +1926,8 @@
           try {
             newReply = await fetchWithRetry(newText);
           } catch (err) {
-            newReply = err.friendly || "Something went wrong. Please try again.";
+            newReply =
+              err.friendly || "Something went wrong. Please try again.";
           }
 
           // Add new branch
@@ -1860,7 +1965,10 @@
       async function fetchWithRetry(message, attempt = 1) {
         try {
           if (attempt > 1) {
-            showBanner("reconnecting", `Reconnecting\u2026 (attempt ${attempt} of ${MAX_RETRIES + 1})`);
+            showBanner(
+              "reconnecting",
+              `Reconnecting\u2026 (attempt ${attempt} of ${MAX_RETRIES + 1})`,
+            );
             await new Promise((r) => setTimeout(r, RETRY_DELAY_MS));
           }
           const res = await fetch(BACKEND, {
@@ -1869,15 +1977,45 @@
             body: JSON.stringify({ message }),
           });
           const data = await res.json();
-          if (!res.ok) throw { friendly: data.error || "The assistant encountered an error. Please try again.", noRetry: true };
+          if (!res.ok)
+            throw {
+              friendly:
+                data.error ||
+                "The assistant encountered an error. Please try again.",
+              noRetry: true,
+            };
           hideBanner();
-          return data.reply || "Sorry, I couldn\u2019t get a response. Please contact ERLHS at (0917) 506-2282.";
+          return (
+            data.reply ||
+            "Sorry, I couldn\u2019t get a response. Please contact ERLHS at (0917) 506-2282."
+          );
         } catch (err) {
           if (err.noRetry) throw err;
-          if (attempt <= MAX_RETRIES) return fetchWithRetry(message, attempt + 1);
+          if (attempt <= MAX_RETRIES)
+            return fetchWithRetry(message, attempt + 1);
           hideBanner();
-          throw { friendly: "Cannot reach the server. Please check your connection or contact ERLHS at (0917) 506-2282." };
+          throw {
+            friendly:
+              "Cannot reach the server. Please check your connection or contact ERLHS at (0917) 506-2282.",
+          };
         }
+      }
+
+      // ── NEW CHAT ─────────────────────────────────
+      function newChat() {
+        const msgsInner = chatSec.querySelector(".chat-inner-msgs");
+        if (msgsInner) msgsInner.remove();
+        chatSec.classList.remove("active");
+        welcomeSec.style.display = "";
+        welcomeSec.style.opacity = "1";
+        catSec.style.display = "";
+        catSec.style.opacity = "1";
+        chatStarted = false;
+        inputEl.value = "";
+        inputEl.style.height = "auto";
+        sendBtnEl.disabled = false;
+        hideBanner();
+        mainEl.scrollTo({ top: 0, behavior: "smooth" });
       }
 
       // ── SEND MESSAGE ──────────────────────────────
@@ -1909,12 +2047,31 @@
         const key = Object.keys(CANNED).find(
           (k) =>
             text.toLowerCase().includes(k) ||
-            (k === "programs" && (text.toLowerCase().includes("program") || text.toLowerCase().includes("strand") || text.toLowerCase().includes("track"))) ||
+            (k === "programs" &&
+              (text.toLowerCase().includes("program") ||
+                text.toLowerCase().includes("strand") ||
+                text.toLowerCase().includes("track"))) ||
             (k === "enrollment" && text.toLowerCase().includes("enroll")) ||
-            (k === "tuition" && (text.toLowerCase().includes("tuit") || text.toLowerCase().includes("fee") || text.toLowerCase().includes("scholar") || text.toLowerCase().includes("free"))) ||
-            (k === "location" && (text.toLowerCase().includes("locat") || text.toLowerCase().includes("where") || text.toLowerCase().includes("address") || text.toLowerCase().includes("direction"))) ||
-            (k === "contact" && (text.toLowerCase().includes("contact") || text.toLowerCase().includes("phone") || text.toLowerCase().includes("email") || text.toLowerCase().includes("principal"))) ||
-            (k === "schedule" && (text.toLowerCase().includes("hour") || text.toLowerCase().includes("schedul") || text.toLowerCase().includes("time") || text.toLowerCase().includes("calendar")))
+            (k === "tuition" &&
+              (text.toLowerCase().includes("tuit") ||
+                text.toLowerCase().includes("fee") ||
+                text.toLowerCase().includes("scholar") ||
+                text.toLowerCase().includes("free"))) ||
+            (k === "location" &&
+              (text.toLowerCase().includes("locat") ||
+                text.toLowerCase().includes("where") ||
+                text.toLowerCase().includes("address") ||
+                text.toLowerCase().includes("direction"))) ||
+            (k === "contact" &&
+              (text.toLowerCase().includes("contact") ||
+                text.toLowerCase().includes("phone") ||
+                text.toLowerCase().includes("email") ||
+                text.toLowerCase().includes("principal"))) ||
+            (k === "schedule" &&
+              (text.toLowerCase().includes("hour") ||
+                text.toLowerCase().includes("schedul") ||
+                text.toLowerCase().includes("time") ||
+                text.toLowerCase().includes("calendar"))),
         );
 
         let reply;
@@ -1926,11 +2083,18 @@
             reply = await fetchWithRetry(text);
           } catch (err) {
             typingRow.remove();
-            showBanner("offline", "Connection lost \u2014 please check your network.");
-            appendMessage("bot", err.friendly || "Something went wrong. Please try again.", {
-              isError: true,
-              onRetry: () => sendMessage(text),
-            });
+            showBanner(
+              "offline",
+              "Connection lost \u2014 please check your network.",
+            );
+            appendMessage(
+              "bot",
+              err.friendly || "Something went wrong. Please try again.",
+              {
+                isError: true,
+                onRetry: () => sendMessage(text),
+              },
+            );
             sendBtnEl.disabled = false;
             inputEl.focus();
             return;
