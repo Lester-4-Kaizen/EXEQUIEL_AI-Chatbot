@@ -1,7 +1,7 @@
 // =============================================================
 // ERLHS AI Assistant — Vercel Serverless Backend
 // File: api/chat.js  (place inside /api folder in Vercel repo)
-// API: Google Gemini (gemini-1.5-flash — free tier)
+// API: Groq (llama-3.3-70b — free tier, no card needed)
 // =============================================================
 
 module.exports = async function handler(req, res) {
@@ -16,9 +16,9 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: "No valid message provided" });
   }
 
-  const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-  if (!GEMINI_API_KEY) {
-    console.error("GEMINI_API_KEY is not set");
+  const GROQ_API_KEY = process.env.GROQ_API_KEY;
+  if (!GROQ_API_KEY) {
+    console.error("GROQ_API_KEY is not set");
     return res.status(500).json({ error: "Server configuration error. Please contact ERLHS at (0917) 506-2282." });
   }
 
@@ -75,37 +75,34 @@ Phone: (0917) 506-2282 | Email: 300845@deped.gov.ph | Visit: Brgy. Poblacion Nor
 `;
 
   try {
-    const geminiRes = await fetch(
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + GEMINI_API_KEY,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          system_instruction: {
-            parts: [{ text: systemInstruction }]
-          },
-          contents: [
-            { role: "user", parts: [{ text: message.trim() }] }
-          ],
-          generationConfig: {
-            temperature: 0.4,
-            maxOutputTokens: 700
-          }
-        })
-      }
-    );
+    const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + GROQ_API_KEY
+      },
+      body: JSON.stringify({
+        model: "llama-3.3-70b-versatile",
+        messages: [
+          { role: "system", content: systemInstruction },
+          { role: "user", content: message.trim() }
+        ],
+        temperature: 0.4,
+        max_tokens: 700
+      })
+    });
 
-    const data = await geminiRes.json();
+    const data = await groqRes.json();
 
-    if (!geminiRes.ok) {
-      console.error("Gemini API error:", geminiRes.status, JSON.stringify(data));
+    if (!groqRes.ok) {
+      console.error("Groq API error:", groqRes.status, JSON.stringify(data));
       return res.status(200).json({
-        reply: "I'm having a bit of trouble connecting to my brain right now! Please try asking again in a second." 
+        reply: "I'm having a bit of trouble connecting to my brain right now! Please try asking again in a second."
       });
     }
 
     const reply =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ||
+      data?.choices?.[0]?.message?.content?.trim() ||
       "I'm sorry, I couldn't generate a response. Please contact ERLHS at (0917) 506-2282.";
 
     return res.status(200).json({ reply });
