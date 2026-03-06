@@ -968,6 +968,107 @@
         letter-spacing: 0.03em;
         line-height: 1.4;
       }
+
+      /* ════════════════════════════════
+       MESSAGE META ROW (timestamp + actions)
+      ════════════════════════════════ */
+      .msg-meta {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0 2px;
+        opacity: 0;
+        transition: opacity 0.18s;
+      }
+      .msg-row:hover .msg-meta {
+        opacity: 1;
+      }
+      .msg-row.user .msg-meta {
+        justify-content: flex-end;
+      }
+      .msg-ts {
+        font-size: 0.56rem;
+        color: var(--dimmer);
+        letter-spacing: 0.04em;
+      }
+
+      /* ── ACTION BUTTONS ── */
+      .msg-action-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 3px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--dim);
+        transition: color 0.15s, background 0.15s;
+      }
+      .msg-action-btn:hover {
+        color: var(--g4);
+        background: rgba(82, 184, 90, 0.12);
+      }
+      .msg-action-btn svg {
+        width: 12px;
+        height: 12px;
+      }
+
+      /* ── INLINE EDIT UI ── */
+      .edit-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+      }
+      .edit-textarea {
+        width: 100%;
+        background: rgba(255,255,255,0.07);
+        border: 1.5px solid rgba(82, 184, 90, 0.5);
+        border-radius: 12px;
+        color: var(--white);
+        font-family: var(--f);
+        font-size: 0.84rem;
+        line-height: 1.55;
+        padding: 10px 14px;
+        resize: none;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(36, 98, 40, 0.18);
+        caret-color: var(--g4);
+      }
+      .edit-btn-row {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+      .edit-cancel-btn, .edit-save-btn {
+        font-family: var(--f);
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 5px 14px;
+        border-radius: 20px;
+        border: none;
+        cursor: pointer;
+        transition: background 0.15s, transform 0.12s;
+      }
+      .edit-cancel-btn {
+        background: rgba(255,255,255,0.08);
+        color: var(--mid);
+        border: 1px solid rgba(255,255,255,0.12);
+      }
+      .edit-cancel-btn:hover {
+        background: rgba(255,255,255,0.14);
+        color: var(--off);
+      }
+      .edit-save-btn {
+        background: linear-gradient(140deg, var(--g2), var(--g3));
+        color: #fff;
+        box-shadow: 0 2px 10px rgba(36, 98, 40, 0.4);
+      }
+      .edit-save-btn:hover {
+        transform: scale(1.04);
+        box-shadow: 0 4px 14px rgba(36, 98, 40, 0.6);
+      }
     </style>
   </head>
   <body>
@@ -1199,19 +1300,17 @@
       const MAX_RETRIES = 2;
       const RETRY_DELAY_MS = 1500;
 
-      // ── TEMPORARY CANNED RESPONSES ───────────────
-      // Remove this object once the real backend is live
+      // ── CONVERSATION HISTORY ─────────────────────
+      // Each entry: { role: "user"|"bot", text: string, rowEl: Element }
+      let conversationHistory = [];
+
+      // ── CANNED RESPONSES ─────────────────────────
       const CANNED = {
         programs: `**Programs Offered at ERLHS**\n\nExequiel R. Lina High School offers the following programs:\n\n**Junior High School (JHS)**\n• Grades 7 to 10 — Standard DepEd curriculum\n\n**Senior High School (SHS)**\n• Grades 11 and 12\n• **Academic Track:** STEM, ABM, HUMSS, GAS\n• **TVL Track:** Leads to TESDA National Certificate\n\n**ALS-SHS**\n• For out-of-school youth and adults who passed the A&E Test (JHS level)\n\nFor more details, contact ERLHS at (0917) 506-2282 or visit the school at Brgy. Poblacion Norte, Licab, Nueva Ecija.`,
-
         enrollment: `**Enrollment Requirements at ERLHS**\n\n**Grade 7 (Incoming)**\n• Grade 6 Form 138 (Report Card)\n• PSA-issued Birth Certificate\n\n**Grade 11 (Senior High School)**\n• Grade 10 Form 138 (Report Card)\n• PSA-issued Birth Certificate\n• Certificate of Good Moral Character\n\n**ALS-SHS Enrollees**\n• A&E Test Results (JHS level passed)\n• PSA-issued Birth Certificate\n• AF2 Enrollment Form\n\n**Transferees**\n• Previous school records\n• PSA-issued Birth Certificate\n• Certificate of Good Moral Character\n\nEnrollment is usually held every **May to June**. For exact dates, call (0917) 506-2282.`,
-
         tuition: `**Tuition & Fees at ERLHS**\n\nAs a **public national high school** under the Department of Education (DepEd), Exequiel R. Lina High School is **free of charge** for all enrolled students.\n\nThis covers:\n• Tuition — FREE\n• Miscellaneous fees — FREE (per DepEd policy)\n\n**Scholarships & Financial Assistance**\n• Students may apply for DepEd-aligned programs such as the **Expanded Students' Grants-in-Aid Program for Poverty Alleviation (ESGPPA)** for SHS\n• Other government scholarship programs may also be available\n\nFor scholarship inquiries, visit the school's Guidance Office or contact (0917) 506-2282.`,
-
-        location: `**ERLHS Location & Directions**\n\n📍 **Address:**\nBrgy. Poblacion Norte, Don Dalmacio Esguerra Avenue, Licab, Nueva Ecija\n\n**How to get there:**\n• From **Cabanatuan City** — take a jeepney or bus bound for Licab; travel time is approximately 30–45 minutes\n• From **San Jose City** — ride a jeepney or tricycle heading to Licab; approximately 20–30 minutes\n• The school is located along Don Dalmacio Esguerra Avenue in Poblacion Norte, the main barangay of Licab\n\nFor more specific directions, call the school at **(0917) 506-2282**.`,
-
+        location: `**ERLHS Location & Directions**\n\n📍 **Address:**\nBrgy. Poblacion Norte, Don Dalmacio Esguerra Avenue, Licab, Nueva Ecija\n\n**How to get there:**\n• From **Cabanatuan City** — take a jeepney or bus bound for Licab; travel time is approximately 30–45 minutes\n• From **San Jose City** — ride a jeepney or tricycle heading to Licab; approximately 20–30 minutes\n• The school is located along Don Dalmacio Esguerra Avenue in Poblacion Norte, the main barangay of Licab\n\nFor more specific directions, call the school at **(0917) 506-2282)**.`,
         contact: `**ERLHS Contact Information**\n\n📞 **Phone:** (0917) 506-2282\n📧 **DepEd Email:** 300845@deped.gov.ph\n📧 **School Email:** erlhs01231965@gmail.com\n🆔 **DepEd School ID:** 300845\n\n**School Administration:**\n• **Principal:** Dr. Glenn B. Abesamis\n• **Assistant Principal:** Maricel Duldulao\n\n📍 **Address:**\nBrgy. Poblacion Norte, Don Dalmacio Esguerra Avenue, Licab, Nueva Ecija\nRegion III – Central Luzon | Nueva Ecija Schools Division\n\nOffice hours are typically Monday to Friday, 7:00 AM – 5:00 PM during the school year.`,
-
         schedule: `**ERLHS School Hours & Calendar**\n\n🕖 **Class Hours (typical)**\n• Monday to Friday\n• Morning: 7:00 AM – 12:00 NN\n• Afternoon: 1:00 PM – 5:00 PM\n\n**School Year Schedule**\n• **Enrollment:** May – June\n• **School Year Opens:** Late July\n• **1st Semester:** August – December\n• **2nd Semester:** January – May\n• **Graduation Ceremonies:** April – May\n\n**Office Hours**\n• Monday to Friday, 7:00 AM – 5:00 PM\n\nFor the latest class schedules or special announcements, please contact the school at (0917) 506-2282.`,
       };
 
@@ -1229,10 +1328,7 @@
 
       // ── HELPERS ──────────────────────────────────
       function formatTime() {
-        return new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
+        return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
       }
       function autoGrow(el) {
         el.style.height = "auto";
@@ -1248,8 +1344,7 @@
         const prompts = {
           programs: "What programs does ERLHS offer?",
           enrollment: "What are the enrollment requirements at ERLHS?",
-          tuition:
-            "How much is the tuition and what scholarships are available?",
+          tuition: "How much is the tuition and what scholarships are available?",
           location: "Where is ERLHS located and how do I get there?",
           contact: "What is the contact information of ERLHS?",
           schedule: "What are the school hours and academic calendar of ERLHS?",
@@ -1261,12 +1356,11 @@
         mainEl.scrollTo({ top: mainEl.scrollHeight, behavior: "smooth" });
       }
       mainEl.addEventListener("scroll", () => {
-        const atBottom =
-          mainEl.scrollHeight - mainEl.scrollTop - mainEl.clientHeight < 60;
+        const atBottom = mainEl.scrollHeight - mainEl.scrollTop - mainEl.clientHeight < 60;
         fabEl.classList.toggle("visible", !atBottom);
       });
 
-      // ── START CHAT (fade welcome → show chat) ─────
+      // ── START CHAT ────────────────────────────────
       function startChat() {
         if (chatStarted) return;
         chatStarted = true;
@@ -1288,6 +1382,16 @@
       }
       function hideBanner() {
         bannerEl.className = "status-banner";
+      }
+
+      // ── RENDER BUBBLE CONTENT ─────────────────────
+      function renderContent(text) {
+        return text
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+          .replace(/\*(.*?)\*/g, "<em>$1</em>")
+          .replace(/\n/g, "<br>");
       }
 
       // ── APPEND MESSAGE ────────────────────────────
@@ -1321,32 +1425,42 @@
             const rb = document.createElement("button");
             rb.className = "retry-btn";
             rb.innerHTML = "&#8635; Try again";
-            rb.onclick = () => {
-              row.remove();
-              options.onRetry();
-            };
+            rb.onclick = () => { row.remove(); options.onRetry(); };
             bub.appendChild(document.createElement("br"));
             bub.appendChild(rb);
           }
         } else {
-          bub.innerHTML = content
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-            .replace(/\*(.*?)\*/g, "<em>$1</em>")
-            .replace(/\n/g, "<br>");
+          bub.innerHTML = renderContent(content);
         }
 
         body.appendChild(bub);
+
+        // ── TIMESTAMP + ACTION BUTTONS ROW ──────────
         if (content !== "__typing__") {
+          const metaRow = document.createElement("div");
+          metaRow.className = "msg-meta";
+
           const ts = document.createElement("span");
           ts.className = "msg-ts";
           ts.textContent = formatTime();
-          body.appendChild(ts);
+          metaRow.appendChild(ts);
+
+          // Edit button only for user messages
+          if (role === "user" && !options.isError) {
+            const editBtn = document.createElement("button");
+            editBtn.className = "msg-action-btn edit-btn";
+            editBtn.title = "Edit message";
+            editBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+            editBtn.onclick = () => startEditMessage(row, content, options.historyIndex);
+            metaRow.appendChild(editBtn);
+          }
+
+          body.appendChild(metaRow);
         }
+
         row.appendChild(av);
         row.appendChild(body);
-        // append inside centered inner wrapper
+
         let inner = chatSec.querySelector(".chat-inner-msgs");
         if (!inner) {
           inner = document.createElement("div");
@@ -1358,14 +1472,95 @@
         return row;
       }
 
+      // ── EDIT MESSAGE FEATURE ──────────────────────
+      function startEditMessage(row, originalText, historyIndex) {
+        const body = row.querySelector(".msg-body");
+        const bub = row.querySelector(".bubble");
+        const metaRow = row.querySelector(".msg-meta");
+
+        // Hide bubble and meta
+        bub.style.display = "none";
+        metaRow.style.display = "none";
+
+        // Create inline edit UI
+        const editWrap = document.createElement("div");
+        editWrap.className = "edit-wrap";
+
+        const editArea = document.createElement("textarea");
+        editArea.className = "edit-textarea";
+        editArea.value = originalText;
+        editArea.rows = 1;
+        setTimeout(() => {
+          editArea.style.height = "auto";
+          editArea.style.height = Math.min(editArea.scrollHeight, 120) + "px";
+          editArea.focus();
+          editArea.setSelectionRange(editArea.value.length, editArea.value.length);
+        }, 10);
+        editArea.addEventListener("input", () => {
+          editArea.style.height = "auto";
+          editArea.style.height = Math.min(editArea.scrollHeight, 120) + "px";
+        });
+        editArea.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            confirmEdit();
+          }
+          if (e.key === "Escape") cancelEdit();
+        });
+
+        const btnRow = document.createElement("div");
+        btnRow.className = "edit-btn-row";
+
+        const cancelBtn = document.createElement("button");
+        cancelBtn.className = "edit-cancel-btn";
+        cancelBtn.textContent = "Cancel";
+        cancelBtn.onclick = cancelEdit;
+
+        const saveBtn = document.createElement("button");
+        saveBtn.className = "edit-save-btn";
+        saveBtn.textContent = "Send";
+        saveBtn.onclick = confirmEdit;
+
+        btnRow.appendChild(cancelBtn);
+        btnRow.appendChild(saveBtn);
+        editWrap.appendChild(editArea);
+        editWrap.appendChild(btnRow);
+        body.appendChild(editWrap);
+
+        function cancelEdit() {
+          editWrap.remove();
+          bub.style.display = "";
+          metaRow.style.display = "";
+        }
+
+        function confirmEdit() {
+          const newText = editArea.value.trim();
+          if (!newText) return;
+          editWrap.remove();
+
+          // Remove this message and everything after it in the DOM
+          const inner = chatSec.querySelector(".chat-inner-msgs");
+          const allRows = Array.from(inner.querySelectorAll(".msg-row"));
+          const rowIndex = allRows.indexOf(row);
+          // Remove from rowIndex onwards
+          for (let i = rowIndex; i < allRows.length; i++) {
+            allRows[i].remove();
+          }
+          // Trim conversation history from historyIndex
+          if (typeof historyIndex === "number") {
+            conversationHistory = conversationHistory.slice(0, historyIndex);
+          }
+
+          // Re-send with the new text
+          sendMessage(newText);
+        }
+      }
+
       // ── FETCH WITH RETRY ──────────────────────────
       async function fetchWithRetry(message, attempt = 1) {
         try {
           if (attempt > 1) {
-            showBanner(
-              "reconnecting",
-              `Reconnecting\u2026 (attempt ${attempt} of ${MAX_RETRIES + 1})`,
-            );
+            showBanner("reconnecting", `Reconnecting\u2026 (attempt ${attempt} of ${MAX_RETRIES + 1})`);
             await new Promise((r) => setTimeout(r, RETRY_DELAY_MS));
           }
           const res = await fetch(BACKEND, {
@@ -1374,27 +1569,14 @@
             body: JSON.stringify({ message }),
           });
           const data = await res.json();
-          if (!res.ok)
-            throw {
-              friendly:
-                data.error ||
-                "The assistant encountered an error. Please try again.",
-              noRetry: true,
-            };
+          if (!res.ok) throw { friendly: data.error || "The assistant encountered an error. Please try again.", noRetry: true };
           hideBanner();
-          return (
-            data.reply ||
-            "Sorry, I couldn\u2019t get a response. Please contact ERLHS at (0917) 506-2282."
-          );
+          return data.reply || "Sorry, I couldn\u2019t get a response. Please contact ERLHS at (0917) 506-2282.";
         } catch (err) {
           if (err.noRetry) throw err;
-          if (attempt <= MAX_RETRIES)
-            return fetchWithRetry(message, attempt + 1);
+          if (attempt <= MAX_RETRIES) return fetchWithRetry(message, attempt + 1);
           hideBanner();
-          throw {
-            friendly:
-              "Cannot reach the server. Please check your connection or contact ERLHS at (0917) 506-2282.",
-          };
+          throw { friendly: "Cannot reach the server. Please check your connection or contact ERLHS at (0917) 506-2282." };
         }
       }
 
@@ -1405,72 +1587,51 @@
 
         startChat();
         hideBanner();
-        appendMessage("user", text);
+
+        const historyIndex = conversationHistory.length;
+        const userRow = appendMessage("user", text, { historyIndex });
+        conversationHistory.push({ role: "user", text });
+
         inputEl.value = "";
         inputEl.style.height = "auto";
         sendBtnEl.disabled = true;
 
         const typingRow = appendMessage("bot", "__typing__");
 
-        // Check canned responses first (temporary until backend is live)
+        // Check canned responses
         const key = Object.keys(CANNED).find(
           (k) =>
             text.toLowerCase().includes(k) ||
-            (k === "programs" &&
-              (text.toLowerCase().includes("program") ||
-                text.toLowerCase().includes("strand") ||
-                text.toLowerCase().includes("track"))) ||
+            (k === "programs" && (text.toLowerCase().includes("program") || text.toLowerCase().includes("strand") || text.toLowerCase().includes("track"))) ||
             (k === "enrollment" && text.toLowerCase().includes("enroll")) ||
-            (k === "tuition" &&
-              (text.toLowerCase().includes("tuit") ||
-                text.toLowerCase().includes("fee") ||
-                text.toLowerCase().includes("scholar") ||
-                text.toLowerCase().includes("free"))) ||
-            (k === "location" &&
-              (text.toLowerCase().includes("locat") ||
-                text.toLowerCase().includes("where") ||
-                text.toLowerCase().includes("address") ||
-                text.toLowerCase().includes("direction"))) ||
-            (k === "contact" &&
-              (text.toLowerCase().includes("contact") ||
-                text.toLowerCase().includes("phone") ||
-                text.toLowerCase().includes("email") ||
-                text.toLowerCase().includes("principal"))) ||
-            (k === "schedule" &&
-              (text.toLowerCase().includes("hour") ||
-                text.toLowerCase().includes("schedul") ||
-                text.toLowerCase().includes("time") ||
-                text.toLowerCase().includes("calendar"))),
+            (k === "tuition" && (text.toLowerCase().includes("tuit") || text.toLowerCase().includes("fee") || text.toLowerCase().includes("scholar") || text.toLowerCase().includes("free"))) ||
+            (k === "location" && (text.toLowerCase().includes("locat") || text.toLowerCase().includes("where") || text.toLowerCase().includes("address") || text.toLowerCase().includes("direction"))) ||
+            (k === "contact" && (text.toLowerCase().includes("contact") || text.toLowerCase().includes("phone") || text.toLowerCase().includes("email") || text.toLowerCase().includes("principal"))) ||
+            (k === "schedule" && (text.toLowerCase().includes("hour") || text.toLowerCase().includes("schedul") || text.toLowerCase().includes("time") || text.toLowerCase().includes("calendar")))
         );
 
         if (key) {
-          await new Promise((r) => setTimeout(r, 900)); // simulate thinking
+          await new Promise((r) => setTimeout(r, 900));
           typingRow.remove();
           appendMessage("bot", CANNED[key]);
+          conversationHistory.push({ role: "bot", text: CANNED[key] });
           sendBtnEl.disabled = false;
           inputEl.focus();
           return;
         }
 
-        // Otherwise hit real backend
         try {
           const reply = await fetchWithRetry(text);
           typingRow.remove();
           appendMessage("bot", reply);
+          conversationHistory.push({ role: "bot", text: reply });
         } catch (err) {
           typingRow.remove();
-          showBanner(
-            "offline",
-            "Connection lost \u2014 please check your network.",
-          );
-          appendMessage(
-            "bot",
-            err.friendly || "Something went wrong. Please try again.",
-            {
-              isError: true,
-              onRetry: () => sendMessage(text),
-            },
-          );
+          showBanner("offline", "Connection lost \u2014 please check your network.");
+          appendMessage("bot", err.friendly || "Something went wrong. Please try again.", {
+            isError: true,
+            onRetry: () => sendMessage(text),
+          });
         }
         sendBtnEl.disabled = false;
         inputEl.focus();
