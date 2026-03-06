@@ -1199,22 +1199,6 @@
       const MAX_RETRIES = 2;
       const RETRY_DELAY_MS = 1500;
 
-      // ── TEMPORARY CANNED RESPONSES ───────────────
-      // Remove this object once the real backend is live
-      const CANNED = {
-        programs: `**Programs Offered at ERLHS**\n\nExequiel R. Lina High School offers the following programs:\n\n**Junior High School (JHS)**\n• Grades 7 to 10 — Standard DepEd curriculum\n\n**Senior High School (SHS)**\n• Grades 11 and 12\n• **Academic Track:** STEM, ABM, HUMSS, GAS\n• **TVL Track:** Leads to TESDA National Certificate\n\n**ALS-SHS**\n• For out-of-school youth and adults who passed the A&E Test (JHS level)\n\nFor more details, contact ERLHS at (0917) 506-2282 or visit the school at Brgy. Poblacion Norte, Licab, Nueva Ecija.`,
-
-        enrollment: `**Enrollment Requirements at ERLHS**\n\n**Grade 7 (Incoming)**\n• Grade 6 Form 138 (Report Card)\n• PSA-issued Birth Certificate\n\n**Grade 11 (Senior High School)**\n• Grade 10 Form 138 (Report Card)\n• PSA-issued Birth Certificate\n• Certificate of Good Moral Character\n\n**ALS-SHS Enrollees**\n• A&E Test Results (JHS level passed)\n• PSA-issued Birth Certificate\n• AF2 Enrollment Form\n\n**Transferees**\n• Previous school records\n• PSA-issued Birth Certificate\n• Certificate of Good Moral Character\n\nEnrollment is usually held every **May to June**. For exact dates, call (0917) 506-2282.`,
-
-        tuition: `**Tuition & Fees at ERLHS**\n\nAs a **public national high school** under the Department of Education (DepEd), Exequiel R. Lina High School is **free of charge** for all enrolled students.\n\nThis covers:\n• Tuition — FREE\n• Miscellaneous fees — FREE (per DepEd policy)\n\n**Scholarships & Financial Assistance**\n• Students may apply for DepEd-aligned programs such as the **Expanded Students' Grants-in-Aid Program for Poverty Alleviation (ESGPPA)** for SHS\n• Other government scholarship programs may also be available\n\nFor scholarship inquiries, visit the school's Guidance Office or contact (0917) 506-2282.`,
-
-        location: `**ERLHS Location & Directions**\n\n📍 **Address:**\nBrgy. Poblacion Norte, Don Dalmacio Esguerra Avenue, Licab, Nueva Ecija\n\n**How to get there:**\n• From **Cabanatuan City** — take a jeepney or bus bound for Licab; travel time is approximately 30–45 minutes\n• From **San Jose City** — ride a jeepney or tricycle heading to Licab; approximately 20–30 minutes\n• The school is located along Don Dalmacio Esguerra Avenue in Poblacion Norte, the main barangay of Licab\n\nFor more specific directions, call the school at **(0917) 506-2282**.`,
-
-        contact: `**ERLHS Contact Information**\n\n📞 **Phone:** (0917) 506-2282\n📧 **DepEd Email:** 300845@deped.gov.ph\n📧 **School Email:** erlhs01231965@gmail.com\n🆔 **DepEd School ID:** 300845\n\n**School Administration:**\n• **Principal:** Dr. Glenn B. Abesamis\n• **Assistant Principal:** Maricel Duldulao\n\n📍 **Address:**\nBrgy. Poblacion Norte, Don Dalmacio Esguerra Avenue, Licab, Nueva Ecija\nRegion III – Central Luzon | Nueva Ecija Schools Division\n\nOffice hours are typically Monday to Friday, 7:00 AM – 5:00 PM during the school year.`,
-
-        schedule: `**ERLHS School Hours & Calendar**\n\n🕖 **Class Hours (typical)**\n• Monday to Friday\n• Morning: 7:00 AM – 12:00 NN\n• Afternoon: 1:00 PM – 5:00 PM\n\n**School Year Schedule**\n• **Enrollment:** May – June\n• **School Year Opens:** Late July\n• **1st Semester:** August – December\n• **2nd Semester:** January – May\n• **Graduation Ceremonies:** April – May\n\n**Office Hours**\n• Monday to Friday, 7:00 AM – 5:00 PM\n\nFor the latest class schedules or special announcements, please contact the school at (0917) 506-2282.`,
-      };
-
       // ── ELEMENTS ─────────────────────────────────
       const mainEl = document.getElementById("mainScroll");
       const inputEl = document.getElementById("userinput");
@@ -1411,46 +1395,6 @@
         sendBtnEl.disabled = true;
 
         const typingRow = appendMessage("bot", "__typing__");
-
-        // Check canned responses first (temporary until backend is live)
-        const key = Object.keys(CANNED).find(
-          (k) =>
-            text.toLowerCase().includes(k) ||
-            (k === "programs" &&
-              (text.toLowerCase().includes("program") ||
-                text.toLowerCase().includes("strand") ||
-                text.toLowerCase().includes("track"))) ||
-            (k === "enrollment" && text.toLowerCase().includes("enroll")) ||
-            (k === "tuition" &&
-              (text.toLowerCase().includes("tuit") ||
-                text.toLowerCase().includes("fee") ||
-                text.toLowerCase().includes("scholar") ||
-                text.toLowerCase().includes("free"))) ||
-            (k === "location" &&
-              (text.toLowerCase().includes("locat") ||
-                text.toLowerCase().includes("where") ||
-                text.toLowerCase().includes("address") ||
-                text.toLowerCase().includes("direction"))) ||
-            (k === "contact" &&
-              (text.toLowerCase().includes("contact") ||
-                text.toLowerCase().includes("phone") ||
-                text.toLowerCase().includes("email") ||
-                text.toLowerCase().includes("principal"))) ||
-            (k === "schedule" &&
-              (text.toLowerCase().includes("hour") ||
-                text.toLowerCase().includes("schedul") ||
-                text.toLowerCase().includes("time") ||
-                text.toLowerCase().includes("calendar"))),
-        );
-
-        if (key) {
-          await new Promise((r) => setTimeout(r, 900)); // simulate thinking
-          typingRow.remove();
-          appendMessage("bot", CANNED[key]);
-          sendBtnEl.disabled = false;
-          inputEl.focus();
-          return;
-        }
 
         // Otherwise hit real backend
         try {
